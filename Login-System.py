@@ -1,49 +1,56 @@
-#sign up and login system
-
+import json
 import os
-import ast
 
-if os.path.exists("user.txt"):
-    with open("user.txt", "r") as f:
-        user = ast.literal_eval(f.read())
+file = "user.json"
+
+# Load existing user data
+if os.path.exists(file):
+    try:
+        with open(file, "r") as f:
+            user = json.load(f)
+    except json.JSONDecodeError:
+        user = {}
 else:
     user = {}
 
+# --- Main Program Loop ---
 while True:
     choice = input("Sign up (1) , Login in (2) , Exit (3) ; Enter your choice : ")
+
+    # --- SIGN UP ---
     if choice == "1":
         new_user = input("Enter your username: ")
-        new_pass = input("Create your password: ")
         if new_user in user:
-            print("username already taken")
+            print("❌ Username already exists! Please try another.")
             continue
-        user[new_user] = new_pass
+        else:
+            new_pass = input("Create your password: ")
+            user[new_user] = new_pass
+            # Save the updated dictionary immediately
+            with open(file, "w") as f:
+                json.dump(user, f, indent=4)
+            print("✅ Username successfully created!")
 
-        with open("user.txt", "w") as f:
-            f.write(str(user))
-
-        print("username successfully added")
-
+    # --- LOGIN (Simplified Logic) ---
     elif choice == "2":
-       while True:
-           old_user = input("Enter your username: ")
-           if old_user in user:
-               while True:
-                   new_pass = input("Enter your password: ")
-                   if user[old_user] == new_pass:
-                       print("Successfully logged in")
+        while True:
+            old_user = input("Enter your username: ")
+            if old_user in user:
+                while True:
+                   old_pass = input("Enter your Password: ")
+                   if user[old_user] == old_pass:
+                       print("Successfully logged in!")
                        break
+
                    else:
-                       print("wrong password")
+                       print("Wrong password! entered")
                        continue
-               break
-           else:
-                print("Invalid username entered!")
+                break
+            else:
+                print("Incorrect username!")
                 continue
 
     elif choice == "3":
-        print("Ended successfully!!")
-        break
+        print("BYE! see u soon again!!")
     else:
-        print("invalid choice")
-        continue
+        print("Invalid choice!")
