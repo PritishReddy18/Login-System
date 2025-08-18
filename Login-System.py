@@ -52,5 +52,7 @@ while True:
 
     elif choice == "3":
         print("BYE! see u soon again!!")
+        break
     else:
         print("Invalid choice!")
+        continue
